@@ -12,17 +12,17 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:       #0f1117;
-    --surface:  #1a1d27;
-    --border:   #2a2d3e;
-    --accent:   #4f8ef7;
-    --danger:   #e05c5c;
-    --warning:  #f0a500;
-    --success:  #43c98e;
-    --text:     #e8eaf0;
-    --muted:    #7b7f96;
-    --card-bg:  #22263a;
-    --radius:   12px;
+    --bg:      #0f1117;
+    --surface: #1a1d27;
+    --border:  #2a2d3e;
+    --accent:  #4f8ef7;
+    --danger:  #e05c5c;
+    --warning: #f0a500;
+    --success: #43c98e;
+    --text:    #e8eaf0;
+    --muted:   #7b7f96;
+    --card-bg: #22263a;
+    --radius:  12px;
   }
 
   body {
@@ -32,19 +32,15 @@
     min-height: 100vh;
   }
 
-  /* ── Auth Screen ── */
+  /* ── Auth ── */
   #auth-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    gap: 24px;
-    padding: 32px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; gap: 24px; padding: 32px;
   }
   #auth-screen h1 { font-size: 1.6rem; text-align: center; }
   #auth-screen p  { color: var(--muted); text-align: center; font-size: 0.9rem; }
-  #auth-error     { color: var(--danger); font-size: 0.85rem; text-align: center; display: none; }
+  #auth-error     { color: var(--danger); font-size: 0.85rem; text-align: center; display: none; max-width: 320px; }
 
   /* ── App Shell ── */
   #app { display: none; flex-direction: column; min-height: 100vh; }
@@ -52,32 +48,38 @@
   /* ── Top Bar ── */
   #topbar {
     position: sticky; top: 0; z-index: 100;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 16px;
-    display: flex; align-items: center; gap: 12px;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 12px 16px; display: flex; align-items: center; gap: 12px;
   }
   #topbar h2 { flex: 1; font-size: 1rem; }
 
   .btn {
-    padding: 8px 16px;
-    border-radius: 8px; border: none;
+    padding: 8px 16px; border-radius: 8px; border: none;
     font-size: 0.85rem; font-weight: 600;
     cursor: pointer; transition: opacity 0.15s;
   }
-  .btn:disabled   { opacity: 0.45; cursor: not-allowed; }
-  .btn-primary    { background: var(--accent);   color: #fff; }
-  .btn-success    { background: var(--success);  color: #fff; }
-  .btn-ghost      { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-primary  { background: var(--accent);  color: #fff; }
+  .btn-success  { background: var(--success); color: #fff; }
+  .btn-ghost    { background: transparent; color: var(--muted); border: 1px solid var(--border); }
 
   /* ── Status Bar ── */
   #statusbar {
     padding: 8px 16px; font-size: 0.78rem;
-    color: var(--muted);
-    background: var(--surface);
+    color: var(--muted); background: var(--surface);
     border-bottom: 1px solid var(--border);
+    min-height: 32px;
   }
   #statusbar span { color: var(--text); font-weight: 600; }
+
+  /* ── Warning Banner ── */
+  #warning-banner {
+    display: none;
+    background: rgba(240,165,0,0.12);
+    border-bottom: 1px solid rgba(240,165,0,0.3);
+    color: var(--warning);
+    padding: 8px 16px; font-size: 0.82rem;
+  }
 
   /* ── Board ── */
   #board {
@@ -86,6 +88,16 @@
     -webkit-overflow-scrolling: touch;
   }
 
+  /* ── Empty State ── */
+  #empty-state {
+    display: none;
+    flex-direction: column; align-items: center;
+    justify-content: center; gap: 12px;
+    padding: 48px 32px; text-align: center;
+    color: var(--muted); width: 100%;
+  }
+  #empty-state .icon { font-size: 2.5rem; }
+
   /* ── Driver Column ── */
   .driver-col {
     flex: 0 0 260px;
@@ -93,33 +105,27 @@
     border-radius: var(--radius);
     border: 1px solid var(--border);
     display: flex; flex-direction: column;
-    max-height: calc(100vh - 160px);
+    max-height: calc(100vh - 170px);
   }
+  .driver-col.unassigned-col { border: 2px dashed var(--border); }
+
   .driver-header {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
+    padding: 12px; border-bottom: 1px solid var(--border);
     background: var(--surface);
     border-radius: var(--radius) var(--radius) 0 0;
     position: sticky; top: 0; z-index: 10;
   }
   .driver-title {
     display: flex; align-items: center;
-    justify-content: space-between;
-    gap: 8px; margin-bottom: 8px;
+    justify-content: space-between; gap: 8px; margin-bottom: 8px;
   }
   .driver-count { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
 
-  /* Driver dropdown */
   .driver-select {
-    flex: 1;
-    background: var(--card-bg);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 4px 8px;
-    font-size: 0.9rem; font-weight: 700;
-    cursor: pointer;
-    max-width: 160px;
+    flex: 1; background: var(--card-bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 4px 8px; font-size: 0.88rem; font-weight: 700;
+    cursor: pointer; max-width: 170px;
   }
   .driver-select:focus { outline: 1px solid var(--accent); }
 
@@ -129,8 +135,7 @@
     border-radius: 99px; overflow: hidden;
   }
   .cap-bar-fill {
-    height: 100%; border-radius: 99px;
-    background: var(--success);
+    height: 100%; border-radius: 99px; background: var(--success);
     transition: width 0.3s, background 0.3s;
   }
   .cap-label {
@@ -139,21 +144,16 @@
   }
   .cap-label .over { color: var(--danger); font-weight: 700; }
 
-  /* Card list */
-  .order-list {
-    padding: 8px; overflow-y: auto; flex: 1; min-height: 60px;
-  }
+  .order-list { padding: 8px; overflow-y: auto; flex: 1; min-height: 60px; }
 
   /* ── Order Card ── */
   .order-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 12px; margin-bottom: 8px;
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;
     cursor: grab; user-select: none;
     transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
   }
-  .order-card:active      { transform: scale(0.97); }
+  .order-card:active           { transform: scale(0.97); }
   .order-card.sortable-ghost   { opacity: 0.35; }
   .order-card.sortable-chosen  { box-shadow: 0 4px 20px rgba(79,142,247,0.35); border-color: var(--accent); }
 
@@ -163,8 +163,7 @@
   }
   .card-name   { font-weight: 600; font-size: 0.88rem; line-height: 1.3; }
   .card-weight {
-    flex-shrink: 0;
-    background: rgba(79,142,247,0.15); color: var(--accent);
+    flex-shrink: 0; background: rgba(79,142,247,0.15); color: var(--accent);
     border-radius: 6px; padding: 2px 7px;
     font-size: 0.75rem; font-weight: 700; white-space: nowrap;
   }
@@ -178,12 +177,6 @@
   .badge { display: inline-block; border-radius: 5px; padding: 1px 6px; font-size: 0.68rem; font-weight: 700; }
   .badge-flex   { background: rgba(67,201,142,0.15); color: var(--success); }
   .badge-noflex { background: rgba(224,92,92,0.15);  color: var(--danger);  }
-
-  /* ── Unassigned Column ── */
-  .unassigned-col {
-    border: 2px dashed var(--border) !important;
-  }
-  .unassigned-col .driver-header { background: transparent; }
 
   /* ── Loading ── */
   #loading {
@@ -211,7 +204,7 @@
   }
   #toast.show { opacity: 1; }
 
-  /* ── Bottom Action Bar ── */
+  /* ── Bottom Bar ── */
   #action-bar {
     position: sticky; bottom: 0; z-index: 100;
     background: var(--surface); border-top: 1px solid var(--border);
@@ -248,25 +241,29 @@
     <h2>🚛 Distribution Board</h2>
     <button class="btn btn-ghost" onclick="logout()">Sign out</button>
   </div>
+  <div id="warning-banner"></div>
   <div id="statusbar">Loading…</div>
-  <div id="board"></div>
+  <div id="board">
+    <div id="empty-state">
+      <div class="icon">📋</div>
+      <div>No driver columns found.<br>Check that columns J & K in your sheet have Vehicle_ID and Vehicle_Cap data.</div>
+      <button class="btn btn-ghost" onclick="loadData()" style="margin-top:8px">🔄 Retry</button>
+    </div>
+  </div>
   <div id="action-bar">
     <button class="btn btn-primary" id="btn-distribute" onclick="runDistribute()">⚡ Auto-Distribute</button>
     <button class="btn btn-success"  id="btn-save"       onclick="saveAssignments()" disabled>✅ Confirm & Push</button>
   </div>
 </div>
 
-<!-- ── Loading Overlay ── -->
 <div id="loading"><div class="spinner"></div><span id="loading-msg">Loading…</span></div>
-
-<!-- ── Toast ── -->
 <div id="toast"></div>
 
 <script>
 // ══════════════════════════════════════════════
-// CONFIG — replace both values before deploying
+// CONFIG
 // ══════════════════════════════════════════════
-const GAS_URL          = "https://script.google.com/macros/s/AKfycby8vENL5OpSOIWtFTYwVgZHxOJOrfrlwvg1tPnnpHhUgC81ak37AP3W04m49pb3x_g18A/exec";
+const GAS_URL          = "https://script.google.com/macros/s/AKfycbyeBC6HgoO4zpPu_t2Ro5Cg7JOMkJyR14UjWfeMT5IN25mXC1txB4y1swCHnWaPXyke0w/exec";
 const GOOGLE_CLIENT_ID = "419979964042-afehenfab2n3irgl43ghh8npcf10u639.apps.googleusercontent.com";
 // ══════════════════════════════════════════════
 
@@ -280,54 +277,69 @@ let board     = { unassigned: [] };
 function onGoogleSignIn(response) {
   idToken = response.credential;
   document.getElementById("auth-screen").style.display = "none";
-  document.getElementById("app").style.display = "flex";
+  document.getElementById("app").style.display        = "flex";
   loadData();
 }
 
 function logout() {
   google.accounts.id.disableAutoSelect();
   idToken = null;
-  document.getElementById("app").style.display = "none";
+  document.getElementById("app").style.display         = "none";
   document.getElementById("auth-screen").style.display = "flex";
 }
 
 // ── API ───────────────────────────────────────
-// POST uses text/plain to avoid CORS preflight — GAS still receives the JSON body
 
 async function api(method, body = {}) {
-  if (method === "GET") {
-    const res  = await fetch(`${GAS_URL}?idToken=${encodeURIComponent(idToken)}`);
+  try {
+    if (method === "GET") {
+      const res  = await fetch(`${GAS_URL}?idToken=${encodeURIComponent(idToken)}`);
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      return data;
+    }
+    const res  = await fetch(GAS_URL, {
+      method:  "POST",
+      headers: { "Content-Type": "text/plain" },
+      body:    JSON.stringify({ idToken, ...body })
+    });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     return data;
+  } catch (e) {
+    // Improve error message for common issues
+    if (e.message.includes("Failed to fetch")) {
+      throw new Error("Cannot reach the server. Check your GAS_URL and make sure the deployment is live.");
+    }
+    throw e;
   }
-
-  const res  = await fetch(GAS_URL, {
-    method:  "POST",
-    headers: { "Content-Type": "text/plain" },   // ← prevents CORS preflight
-    body:    JSON.stringify({ idToken, ...body })
-  });
-  const data = await res.json();
-  if (data.error) throw new Error(data.error);
-  return data;
 }
 
-// ── Load initial data ─────────────────────────
+// ── Load data ─────────────────────────────────
 
 async function loadData() {
   showLoading("Fetching orders…");
+  hideWarning();
+
   try {
     const data = await api("GET");
-    drivers   = data.drivers;
-    allOrders = data.orders;
 
+    drivers   = data.drivers   || [];
+    allOrders = data.orders    || [];
+
+    // Show warning if server flagged something
+    if (data.warning) showWarning("⚠ " + data.warning);
+
+    // Reset board state
     board = { unassigned: [...allOrders] };
-    drivers.forEach(d => board[d.id] = []);
+    drivers.forEach(d => { board[d.id] = []; });
 
     renderBoard();
     updateStatus();
+
   } catch (e) {
     showAuthError(e.message);
+    setStatus("❌ Failed to load — " + e.message);
   } finally {
     hideLoading();
   }
@@ -336,11 +348,16 @@ async function loadData() {
 // ── Auto-distribute ───────────────────────────
 
 async function runDistribute() {
+  if (drivers.length === 0) {
+    toast("❌ No drivers loaded — check your sheet columns J & K");
+    return;
+  }
   showLoading("Running distribution algorithm…");
   document.getElementById("btn-distribute").disabled = true;
+
   try {
     const data = await api("POST", { action: "distribute" });
-    applyResult(data.result);
+    applyResult(data.result || {});
     document.getElementById("btn-save").disabled = false;
     toast("✅ Distribution complete — adjust as needed");
   } catch (e) {
@@ -352,22 +369,30 @@ async function runDistribute() {
 }
 
 function applyResult(result) {
-  // result = { H1: ["name", ...], H2: [...], ... }
-  drivers.forEach(d => board[d.id] = []);
+  // Reset all columns
+  drivers.forEach(d => { board[d.id] = []; });
   board.unassigned = [];
 
-  // Index orders by estName for lookup
+  // Index orders by every possible name key
   const byName = {};
-  allOrders.forEach(o => { byName[o.estName] = o; });
-
-  drivers.forEach(d => {
-    (result[d.id] || []).forEach(name => {
-      const order = byName[name];
-      if (order) board[d.id].push(order);
+  allOrders.forEach(o => {
+    byName[o.estName] = o;
+    (o.displayNames || []).forEach(n => {
+      if (n) byName[n.trim()] = o;
     });
   });
 
-  // Anything unmatched → unassigned
+  // Assign from result
+  drivers.forEach(d => {
+    (result[d.id] || []).forEach(name => {
+      const order = byName[name.trim()];
+      if (order && !board[d.id].find(x => x.id === order.id)) {
+        board[d.id].push(order);
+      }
+    });
+  });
+
+  // Unmatched → unassigned
   const assignedIds = new Set(drivers.flatMap(d => board[d.id].map(o => o.id)));
   board.unassigned  = allOrders.filter(o => !assignedIds.has(o.id));
 
@@ -375,7 +400,7 @@ function applyResult(result) {
   updateStatus();
 }
 
-// ── Save / push to Main ───────────────────────
+// ── Save / push ───────────────────────────────
 
 async function saveAssignments() {
   showLoading("Checking capacity…");
@@ -389,19 +414,15 @@ async function saveAssignments() {
   try {
     const result = await api("POST", { action: "save", assignments });
 
-    // Server found capacity violations — ask user
     if (result.violations) {
       hideLoading();
       const msg = "⚠️ Capacity issues:\n\n"
         + result.violations.join("\n")
         + "\n\nPush to Main sheet anyway?";
-
       if (!confirm(msg)) {
         document.getElementById("btn-save").disabled = false;
         return;
       }
-
-      // User confirmed override
       showLoading("Pushing to Main sheet…");
       await api("POST", { action: "save", assignments, forceOverride: true });
     }
@@ -418,13 +439,22 @@ async function saveAssignments() {
 // ── Render ────────────────────────────────────
 
 function renderBoard() {
-  const boardEl = document.getElementById("board");
+  const boardEl   = document.getElementById("board");
+  const emptyEl   = document.getElementById("empty-state");
   boardEl.innerHTML = "";
 
-  // Unassigned column first
+  if (drivers.length === 0) {
+    boardEl.appendChild(emptyEl);
+    emptyEl.style.display = "flex";
+    return;
+  }
+
+  emptyEl.style.display = "none";
+
+  // Unassigned column
   boardEl.appendChild(buildColumn(null));
 
-  // One column per driver
+  // Driver columns
   drivers.forEach(d => boardEl.appendChild(buildColumn(d)));
 }
 
@@ -437,15 +467,12 @@ function buildColumn(driver) {
   const cap  = isUnassigned ? 0 : driver.capacity;
   const pct  = cap > 0 ? Math.min(load / cap * 100, 100) : 0;
   const over = cap > 0 && load > cap;
-  const fillColor = over
-    ? "var(--danger)"
-    : pct > 80 ? "var(--warning)" : "var(--success)";
+  const fillColor = over ? "var(--danger)" : pct > 80 ? "var(--warning)" : "var(--success)";
 
-  const col = document.createElement("div");
-  col.className = "driver-col" + (isUnassigned ? " unassigned-col" : "");
-  col.id        = "col-" + colId;
+  const col       = document.createElement("div");
+  col.className   = "driver-col" + (isUnassigned ? " unassigned-col" : "");
+  col.id          = "col-" + colId;
 
-  // Build dropdown options (only on driver columns, not unassigned)
   const headerContent = isUnassigned
     ? `<span style="font-weight:700;color:var(--muted)">📦 Unassigned</span>`
     : `<select class="driver-select"
@@ -482,20 +509,19 @@ function buildColumn(driver) {
   orders.forEach(o => list.appendChild(buildCard(o)));
 
   Sortable.create(list, {
-    group:       "orders",
-    animation:   150,
-    ghostClass:  "sortable-ghost",
-    chosenClass: "sortable-chosen",
+    group: "orders", animation: 150,
+    ghostClass: "sortable-ghost", chosenClass: "sortable-chosen",
     onEnd(evt) {
       const fromCol = evt.from.dataset.col;
       const toCol   = evt.to.dataset.col;
       const orderId = evt.item.dataset.id;
       if (fromCol === toCol) return;
 
-      const order = board[fromCol].find(o => String(o.id) === orderId);
+      const order = (board[fromCol] || []).find(o => String(o.id) === orderId);
       if (!order) return;
 
       board[fromCol] = board[fromCol].filter(o => String(o.id) !== orderId);
+      if (!board[toCol]) board[toCol] = [];
       board[toCol].splice(evt.newIndex, 0, order);
 
       refreshColumnHeader(fromCol);
@@ -509,9 +535,9 @@ function buildColumn(driver) {
 }
 
 function buildCard(order) {
-  const card       = document.createElement("div");
-  card.className   = "order-card";
-  card.dataset.id  = order.id;
+  const card      = document.createElement("div");
+  card.className  = "order-card";
+  card.dataset.id = order.id;
 
   const flexBadge = order.flexible
     ? `<span class="badge badge-flex">Flexible</span>`
@@ -519,7 +545,7 @@ function buildCard(order) {
 
   card.innerHTML = `
     <div class="card-top">
-      <span class="card-name">${order.estName || order.id}</span>
+      <span class="card-name">${order.estName || String(order.id)}</span>
       <span class="card-weight">${(order.weight || 0).toLocaleString()} kg</span>
     </div>
     <div class="card-row">📍 <strong>${order.neighborhood || order.location || "—"}</strong></div>
@@ -529,33 +555,28 @@ function buildCard(order) {
   return card;
 }
 
-// ── Driver column swap via dropdown ──────────
+// ── Driver swap ───────────────────────────────
 
 function swapDriverColumns(fromId, toId) {
   if (fromId === toId) return;
-
-  // Swap the order arrays in the board model
   const temp    = board[fromId] || [];
   board[fromId] = board[toId]   || [];
   board[toId]   = temp;
-
-  // Full re-render so all dropdowns reflect new state
   renderBoard();
   updateStatus();
   document.getElementById("btn-save").disabled = false;
   toast(`↔ Swapped ${fromId} ↔ ${toId}`);
 }
 
-// ── Refresh a single column header (after drag) ──
+// ── Refresh single column header after drag ───
 
 function refreshColumnHeader(colId) {
-  const countEl = document.getElementById("count-" + colId);
   const orders  = board[colId] || [];
-
+  const countEl = document.getElementById("count-" + colId);
   if (countEl) countEl.textContent = orders.length + " orders";
   if (colId === "unassigned") return;
 
-  const driver  = drivers.find(d => d.id === colId);
+  const driver = drivers.find(d => d.id === colId);
   if (!driver) return;
 
   const load  = orders.reduce((s, o) => s + (o.weight || 0), 0);
@@ -565,7 +586,6 @@ function refreshColumnHeader(colId) {
 
   const barEl  = document.getElementById("bar-"  + colId);
   const loadEl = document.getElementById("load-" + colId);
-
   if (barEl)  { barEl.style.width = pct + "%"; barEl.style.background = color; }
   if (loadEl) {
     loadEl.textContent = (over ? "⚠ " : "") + load.toLocaleString() + " kg";
@@ -591,20 +611,33 @@ function updateStatus() {
   document.getElementById("statusbar").innerHTML = html;
 }
 
-// ── UI Helpers ────────────────────────────────
+function setStatus(msg) {
+  document.getElementById("statusbar").textContent = msg;
+}
+
+// ── UI helpers ────────────────────────────────
 
 function showLoading(msg = "Loading…") {
   document.getElementById("loading-msg").textContent = msg;
   document.getElementById("loading").classList.add("show");
 }
-function hideLoading() {
-  document.getElementById("loading").classList.remove("show");
+function hideLoading()  { document.getElementById("loading").classList.remove("show"); }
+
+function showWarning(msg) {
+  const el = document.getElementById("warning-banner");
+  el.textContent    = msg;
+  el.style.display  = "block";
 }
+function hideWarning() {
+  document.getElementById("warning-banner").style.display = "none";
+}
+
 function showAuthError(msg) {
   const el = document.getElementById("auth-error");
-  el.textContent = msg;
+  el.textContent   = msg;
   el.style.display = "block";
 }
+
 function toast(msg, duration = 3500) {
   const el = document.getElementById("toast");
   el.textContent = msg;
