@@ -163,16 +163,12 @@
       .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
       .toast.success { background: var(--ok); }
       .toast.error   { background: var(--err); }
-
-      /* ── KANBAN — blends into the same card style ── */
       .kanban-toolbar {
         display: flex; align-items: center;
         justify-content: space-between; flex-wrap: wrap; gap: 10px;
         margin-bottom: 14px;
       }
-      .kanban-title-row {
-        display: flex; align-items: center; gap: 10px;
-      }
+      .kanban-title-row { display: flex; align-items: center; gap: 10px; }
       .unsaved-pill {
         display: none; align-items: center; gap: 6px;
         background: #fff7ed; border: 1px solid #fed7aa;
@@ -198,15 +194,10 @@
         border-radius: 10px; display: flex; flex-direction: column;
         transition: border-color .2s, box-shadow .2s;
       }
-      .driver-col.drag-over {
-        border-color: var(--brand);
-        box-shadow: 0 0 0 3px var(--brand-light);
-      }
+      .driver-col.drag-over { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-light); }
       .col-header {
-        padding: 10px 12px 8px;
-        border-bottom: 1px solid #e5e2f8;
-        border-radius: 10px 10px 0 0;
-        background: var(--brand-light);
+        padding: 10px 12px 8px; border-bottom: 1px solid #e5e2f8;
+        border-radius: 10px 10px 0 0; background: var(--brand-light);
       }
       .col-name { font-size: 12px; font-weight: 700; color: var(--brand); }
       .col-count {
@@ -217,8 +208,7 @@
       }
       .card-list {
         flex: 1; padding: 8px;
-        display: flex; flex-direction: column; gap: 5px;
-        min-height: 60px;
+        display: flex; flex-direction: column; gap: 5px; min-height: 60px;
       }
       .order-card {
         background: var(--card); border: 1px solid #e5e2f8;
@@ -257,14 +247,12 @@
 
     <div class="wrapper">
 
-      <!-- Header -->
       <div class="header">
         <img src="LOGO_URL_HERE" alt="سلعة" />
         <h1>سلعة</h1>
         <p>موردك الأول في الدواجن</p>
       </div>
 
-      <!-- Stats -->
       <div class="stats-grid" id="statsGrid">
         <div class="stat-card">
           <div class="num" id="statSent">--</div>
@@ -284,7 +272,6 @@
         </div>
       </div>
 
-      <!-- Distribution Table -->
       <div class="section">
         <div class="section-title"><span>📊</span> نتائج التوزيع</div>
         <div id="distTableWrap">
@@ -292,7 +279,6 @@
         </div>
       </div>
 
-      <!-- Operations -->
       <div class="section">
         <div class="section-title"><span>⚙️</span> العمليات</div>
         <div class="btn-grid">
@@ -314,7 +300,6 @@
         </div>
       </div>
 
-      <!-- Kanban -->
       <div class="section">
         <div class="kanban-toolbar">
           <div class="kanban-title-row">
@@ -341,7 +326,6 @@
         </div>
       </div>
 
-      <!-- Triggers -->
       <div class="section">
         <div class="section-title"><span>⏱️</span> التريقرات</div>
         <div class="btn-grid">
@@ -358,7 +342,6 @@
         <div class="trigger-list" id="triggerList"></div>
       </div>
 
-      <!-- Logs -->
       <div class="section">
         <div class="section-title"><span>📜</span> سجل آخر العمليات</div>
         <div class="logs-wrapper" id="logsWrap">
@@ -373,10 +356,8 @@
     </div>
 
     <script>
-      /* ── CONFIG ───────────────────────────────────────── */
       var GAS_URL = 'https://script.google.com/a/macros/saleaah.com/s/AKfycbxegmfzxtzmJtNiByBzQlPwnqGc_5Lk-kRUYreoigwd09COy1hRhLZTrRvvB_dYnr-I/exec';
 
-      /* ── HELPERS ──────────────────────────────────────── */
       function $(id){ return document.getElementById(id); }
       function showOverlay(msg){ $('overlayText').textContent=msg||'جارٍ التنفيذ...'; $('overlay').classList.add('show'); }
       function hideOverlay(){ $('overlay').classList.remove('show'); }
@@ -396,12 +377,7 @@
         return d.innerHTML;
       }
 
-      /* ── JSONP ────────────────────────────────────────── */
       function jsonp(action,params,cb){
-        if(!GAS_URL||GAS_URL==='https://script.google.com/a/macros/saleaah.com/s/AKfycbxegmfzxtzmJtNiByBzQlPwnqGc_5Lk-kRUYreoigwd09COy1hRhLZTrRvvB_dYnr-I/exec'){
-          cb(null,new Error('الرجاء تحديث GAS_URL في الكود'));
-          return;
-        }
         var name='_gcb_'+Date.now()+'_'+Math.floor(Math.random()*1e7);
         var script=document.createElement('script');
         var timer;
@@ -415,18 +391,14 @@
         function cleanup(){ delete window[name]; if(script.parentNode)script.parentNode.removeChild(script); }
       }
 
-      /* ── run() ────────────────────────────────────────── */
       function run(fnName,label){
         showOverlay(label+'...');
         disableButtons(true);
         jsonp(fnName,null,function(r,err){
           hideOverlay(); disableButtons(false);
           if(err){ toast(err.message,'error'); return; }
-          if(r&&r.ok){
-            toast(label+' ✅ ('+r.duration+' ث)','success');
-          } else {
-            toast((r&&r.message)||'خطأ غير معروف','error');
-          }
+          if(r&&r.ok){ toast(label+' ✅ ('+r.duration+' ث)','success'); }
+          else { toast((r&&r.message)||'خطأ غير معروف','error'); }
           loadStats(); loadLogs();
           if(fnName==='opDistributeSweep'||fnName==='opDistributeToMain') loadDistTable();
         });
@@ -442,14 +414,11 @@
             toast('توزيع Sweep ✅ ('+r.duration+' ث)','success');
             loadDistTable();
             setTimeout(loadBoard,400);
-          } else {
-            toast((r&&r.message)||'خطأ','error');
-          }
+          } else { toast((r&&r.message)||'خطأ','error'); }
           loadStats(); loadLogs();
         });
       }
 
-      /* ── DATA LOADERS ─────────────────────────────────── */
       function loadStats(){
         jsonp('getStats',null,function(r,err){
           if(err||!r||!r.ok)return;
@@ -483,7 +452,7 @@
         });
       }
       function loadLogs(){
-        jsonp('getRecentLogs',{n:12},function(r,err){
+        jsonp('getRecentLogs',{limit:12},function(r,err){
           var wrap=$('logsWrap');
           if(err||!r||!r.ok||!r.logs||!r.logs.length){
             wrap.innerHTML='<p style="color:var(--muted);text-align:center;font-size:13px">لا توجد سجلات بعد</p>';
@@ -524,15 +493,13 @@
         showOverlay('مسح السجل...');
         jsonp('clearLogs',null,function(r,err){
           hideOverlay();
-          if(err){toast(err.message,'error');return;}
-          if(r&&r.ok){toast('تم مسح السجل ✅','success');loadLogs();}
+          if(err){ toast(err.message,'error'); return; }
+          if(r&&r.ok){ toast('تم مسح السجل ✅','success'); loadLogs(); }
           else toast((r&&r.message)||'خطأ','error');
         });
       }
 
-      /* ── KANBAN ───────────────────────────────────────── */
-      var _original=null, _state=null;
-      var _dragging=null, _fromCol=null, _ghost=null;
+      var _original=null,_state=null,_dragging=null,_fromCol=null,_ghost=null;
 
       function loadBoard(){
         $('boardEmpty').style.display='flex';
@@ -586,7 +553,7 @@
       function onDragLeave(e){ if(!this.contains(e.relatedTarget)){ this.closest('.driver-col').classList.remove('drag-over'); removeGhost(); } }
       function onDrop(e){
         e.preventDefault(); removeGhost();
-        var targetList=this, toCol=targetList.dataset.col;
+        var targetList=this,toCol=targetList.dataset.col;
         targetList.closest('.driver-col').classList.remove('drag-over');
         if(!_dragging)return;
         var after=getDragAfterEl(targetList,e.clientY);
@@ -603,7 +570,7 @@
       function getDragAfterEl(container,y){
         var cards=Array.from(container.querySelectorAll('.order-card:not(.dragging)'));
         return cards.reduce(function(closest,child){
-          var box=child.getBoundingClientRect(), offset=y-(box.top+box.height/2);
+          var box=child.getBoundingClientRect(),offset=y-(box.top+box.height/2);
           if(offset<0&&offset>closest.offset)return{offset:offset,element:child};
           return closest;
         },{offset:-Infinity,element:null}).element;
@@ -640,7 +607,6 @@
       }
       function deepCopy(o){ return JSON.parse(JSON.stringify(o)); }
 
-      /* ── INIT ─────────────────────────────────────────── */
       loadStats();
       loadDistTable();
       loadLogs();
